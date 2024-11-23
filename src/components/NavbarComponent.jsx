@@ -87,7 +87,7 @@ const NavbarComponent = () => {
             to="/"
             className="mr-4 cursor-pointer py-1.5 font-bold capitalize text-xl"
           >
-            Tanvir Anzum
+            Kazi Md. Tanvir Anzum
           </Link>
           <div className="flex items-center gap-4">
             <div className="mr-4 hidden lg:block">{navList}</div>

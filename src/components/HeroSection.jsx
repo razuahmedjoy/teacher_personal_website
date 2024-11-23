@@ -9,7 +9,7 @@ const HeroSection = () => {
             <div className="md:w-1/2 text-center md:text-left order-2 md:order-1 mt-12">
                 <p className='text-lg mb-2'>Hello I'm</p>
                 <h1 className="text-4xl font-bold text-gray-800">
-                    Tanvir Anzum Rashed
+                    Kazi Md. Tanvir Anzum
                 </h1>
                 <p className="text-base text-gray-800 mt-2">
                     Lecturer, Department of Industrial Engineering & Management <br />
@@ -20,7 +20,7 @@ const HeroSection = () => {
                         Contact Me
                     </button>
                     {/* this link must open in new tab */}
-                    
+
                     <a href={Personal?.cv_link} target="_blank">
                         <button className="px-4 py-2 bg-black text-white rounded-lg transition duration-300">
                             Download CV
