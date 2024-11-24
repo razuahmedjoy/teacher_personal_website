@@ -5,12 +5,13 @@ const NewsPage = () => {
 
 
     const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
   
     useEffect(() => {
       const fetchDataFromAPI = async () => {
         try {
+          setLoading(true);
           const result = await fetchData(`${import.meta.env.VITE_API_URL}/news.json`);
           setData(result);  // Store the fetched data in the state
           setLoading(false);
@@ -23,7 +24,7 @@ const NewsPage = () => {
       fetchDataFromAPI();
     }, []);
   
-    if (loading) return <LoadingScreen />;
+    if (loading && !data) return <LoadingScreen />;
     
 
     return (
