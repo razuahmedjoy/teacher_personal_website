@@ -9,8 +9,34 @@ import {
 import { AcademicCapIcon } from "@heroicons/react/24/solid";
 import EducationImage from "./../assets/education.png";
 import educationData from "./../data/education.json";
+import { useEffect, useState } from "react";
+import { fetchData } from "../utils/fetcher";
+import LoadingScreen from "./LoadingScreen";
 
 export function Education() {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+
+
+    useEffect(() => {
+        const fetchDataFromAPI = async () => {
+            try {
+                const result = await fetchData(`${import.meta.env.VITE_API_URL}/education.json`);
+                setData(result);  // Store the fetched data in the state
+                setLoading(false);
+            } catch (error) {
+                setError(error);
+                setLoading(false);
+            }
+        };
+
+        fetchDataFromAPI();
+    }, []);
+
+    if (loading) return <LoadingScreen />;
+
     return (
         <section id="education">
             <h2 className="text-center text-4xl font-medium mb-8">Educations</h2>
@@ -27,7 +53,7 @@ export function Education() {
                     {/* Right section */}
                     <div className="w-full md:w-[40rem] mx-auto mt-5">
                         <Timeline>
-                            {educationData.map((item, index) => (
+                            {data?.map((item, index) => (
                                 <TimelineItem key={index} className="h-44">
                                     {/* if the last element don't show connector */}
                                     {index !== educationData.length - 1 && (

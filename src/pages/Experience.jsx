@@ -1,7 +1,27 @@
-import React from "react";
-import experiences from "../data/experience.json";
+import React, { useEffect, useState } from "react";
+import { fetchData } from "../utils/fetcher";
+import LoadingScreen from "../components/LoadingScreen";
 export function ExperiencePage() {
-    
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+  
+    useEffect(() => {
+      const fetchDataFromAPI = async () => {
+        try {
+          const result = await fetchData(`${import.meta.env.VITE_API_URL}/experience.json`);
+          setData(result);  // Store the fetched data in the state
+          setLoading(false);
+        } catch (error) {
+          setError(error);
+          setLoading(false);
+        }
+      };
+  
+      fetchDataFromAPI();
+    }, []);
+  
+    if (loading) return <LoadingScreen />;
 
     return (
         <section id="job-experiences" className=" py-12">
@@ -10,7 +30,7 @@ export function ExperiencePage() {
                     Experiences
                 </h2>
                 <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                    {experiences.map((exp, index) => (
+                    {data?.map((exp, index) => (
                         <div
                             key={index}
                             className="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 transition-transform transform hover:scale-105"

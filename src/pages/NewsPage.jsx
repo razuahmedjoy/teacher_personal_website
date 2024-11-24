@@ -1,6 +1,29 @@
-import React from "react";
-import newsData from "../data/news.json";
+import React, { useEffect, useState } from "react";
+import { fetchData } from "../utils/fetcher";
+import LoadingScreen from "../components/LoadingScreen";
 const NewsPage = () => {
+
+
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+  
+    useEffect(() => {
+      const fetchDataFromAPI = async () => {
+        try {
+          const result = await fetchData(`${import.meta.env.VITE_API_URL}/news.json`);
+          setData(result);  // Store the fetched data in the state
+          setLoading(false);
+        } catch (error) {
+          setError(error);
+          setLoading(false);
+        }
+      };
+  
+      fetchDataFromAPI();
+    }, []);
+  
+    if (loading) return <LoadingScreen />;
     
 
     return (
@@ -13,7 +36,7 @@ const NewsPage = () => {
                 </h2>
                 <div className="max-w-4xl mx-auto p-6">
                     <div className="space-y-6">
-                        {newsData.map((news, index) => (
+                        {data?.map((news, index) => (
                             <div
                                 key={index}
                                 className="p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"

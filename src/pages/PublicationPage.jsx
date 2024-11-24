@@ -1,8 +1,29 @@
-import React from "react";
-import publications from "../data/publications.json";
+import React, { useEffect, useState } from "react";
+import { fetchData } from "../utils/fetcher";
+import LoadingScreen from "../components/LoadingScreen";
 export function PublicationPage() {
   // Sample publications data
-  
+
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDataFromAPI = async () => {
+      try {
+        const result = await fetchData(`${import.meta.env.VITE_API_URL}/publications.json`);
+        setData(result);  // Store the fetched data in the state
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchDataFromAPI();
+  }, []);
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <section id="publications" className="py-12">
@@ -17,7 +38,7 @@ export function PublicationPage() {
               Journal Publications
             </h3>
             <ul className="space-y-4">
-              {publications.journal.map((pub, index) => (
+              {data?.journal.map((pub, index) => (
                 <li
                   key={index}
                   className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
@@ -46,7 +67,7 @@ export function PublicationPage() {
               Conference Publications
             </h3>
             <ul className="space-y-4">
-              {publications.conference.map((pub, index) => (
+              {data?.conference.map((pub, index) => (
                 <li
                   key={index}
                   className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"

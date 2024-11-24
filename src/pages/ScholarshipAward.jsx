@@ -1,7 +1,27 @@
-import React from "react";
-import scholarshipsAndAwards from "../data/scholarshipAndAward.json";
+import React, { useEffect, useState } from "react";
+import { fetchData } from "../utils/fetcher";
+import LoadingScreen from "../components/LoadingScreen";
 export function ScholarshipAndAwardsPage() {
-  
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchDataFromAPI = async () => {
+      try {
+        const result = await fetchData(`${import.meta.env.VITE_API_URL}/scholarshipAndAward.json`);
+        setData(result);  // Store the fetched data in the state
+        setLoading(false);
+      } catch (error) {
+        setError(error);
+        setLoading(false);
+      }
+    };
+
+    fetchDataFromAPI();
+  }, []);
+
+  if (loading) return <LoadingScreen />;
 
   return (
     <section id="scholarships-awards" className="bg-gray-50 dark:bg-gray-900 py-12">
@@ -10,7 +30,7 @@ export function ScholarshipAndAwardsPage() {
           Scholarships & Awards
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-          {scholarshipsAndAwards.map((award, index) => (
+          {data?.map((award, index) => (
             <div
               key={index}
               className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow"

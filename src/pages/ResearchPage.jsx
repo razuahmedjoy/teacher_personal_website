@@ -1,6 +1,28 @@
-import React from "react";
-import data from "../data/research.json";
+import React, { useEffect, useState } from "react";
+import LoadingScreen from "../components/LoadingScreen";
+import { fetchData } from "../utils/fetcher";
 const ResearchPage = () => {
+
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+  
+    useEffect(() => {
+      const fetchDataFromAPI = async () => {
+        try {
+          const result = await fetchData(`${import.meta.env.VITE_API_URL}/research.json`);
+          setData(result);  // Store the fetched data in the state
+          setLoading(false);
+        } catch (error) {
+          setError(error);
+          setLoading(false);
+        }
+      };
+  
+      fetchDataFromAPI();
+    }, []);
+  
+    if (loading) return <LoadingScreen />;
     return (
         <div className="max-w-4xl mx-auto p-6">
 
@@ -11,7 +33,7 @@ const ResearchPage = () => {
             <section className="mb-12 bg-white shadow-md rounded-md p-5">
                 <h2 className="text-2xl font-bold text-black mb-4">Research Interests</h2>
                 <ul className="list-disc pl-5 space-y-2">
-                    {data.researchInterests.map((interest, index) => (
+                    {data?.researchInterests.map((interest, index) => (
                         <li key={index} className="text-gray-700">
                             {interest}
                         </li>
@@ -23,14 +45,14 @@ const ResearchPage = () => {
             <section>
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Projects</h2>
                 <div className="space-y-6">
-                    {data.projects.map((project, index) => (
+                    {data?.projects.map((project, index) => (
                         <div
                             key={index}
                             className="p-4 border bg-white border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
                         >
                             <h3 className="text-xl font-semibold text-gray-800">{project.title}</h3>
                             <p className="text-gray-600 mb-2">{project.description}</p>
-                            <p className="text-sm text-gray-500 mb-3">Year: {project.year}</p>
+                            <p className="text-sm text-gray-800 mb-3">Year: {project.year}</p>
                             {project.link && (
                                 <a
                                     href={project.link}
